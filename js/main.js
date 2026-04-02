@@ -193,7 +193,7 @@
   function renderOrganizers() {
     const organizers = [
       {
-        name: 'César Valdez',
+        name: 'César Miguel Valdez Córdova',
         role: 'Co-host',
         affiliation: 'McGill / Mila',
         link: 'https://cmvcordova.com',
