@@ -124,6 +124,8 @@
 
     // Re-observe any new fade-up elements
     document.querySelectorAll('.fade-up:not(.visible)').forEach(el => observer.observe(el));
+
+    renderLocalTimes();
   }
 
   function renderTalkRow(talk, isNext) {
@@ -180,8 +182,28 @@
           ${speakerHtml}
           ${noteDisplay}
         </div>
-        <div class="schedule-time">11–12 PM EST</div>
+        <div class="schedule-time">
+          11–12 PM EST
+          <span class="schedule-local-time" data-date="${talk.date}"></span>
+        </div>
       </div>`;
+  }
+
+  // ---- Convert EST times to visitor's local timezone ----
+  function renderLocalTimes() {
+    document.querySelectorAll('.schedule-local-time').forEach(el => {
+      const dateStr = el.dataset.date;
+      if (!dateStr) return;
+      // 11 AM EST = 16:00 UTC
+      const start = new Date(dateStr + 'T16:00:00Z');
+      const end = new Date(dateStr + 'T17:00:00Z');
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // Skip if visitor is in US Eastern
+      if (/America\/(New_York|Toronto|Montreal|Detroit)/.test(tz)) return;
+      const fmt = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      const tzAbbr = start.toLocaleTimeString([], { timeZoneName: 'short' }).split(' ').pop();
+      el.textContent = `${fmt(start)}–${fmt(end)} ${tzAbbr}`;
+    });
   }
 
   // ---- Organizers rendering (if on organizers page) ----

@@ -492,6 +492,13 @@ section {
   letter-spacing: 0.03em;
 }
 
+.schedule-local-time {
+  display: block;
+  color: var(--teal-dim);
+  margin-top: 0.2rem;
+  font-size: 0.65rem;
+}
+
 .schedule-paper-link {
   color: var(--text-primary);
   text-decoration: none;
