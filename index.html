@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiomics Reading Group</title>
+  <meta name="description" content="Exploring the future of ML modeling for multi-omics data. Weekly talks on genomics, transcriptomics, proteomics, and more.">
+  <meta name="theme-color" content="#07070c">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GBHXXDXN7W"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GBHXXDXN7W');
+  </script>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- ======== NAV ======== -->
+  <nav class="nav" role="navigation" aria-label="Main">
+    <div class="container">
+      <a href="index.html" class="nav-brand" aria-label="Home">
+        <img src="assets/logo.png" alt="" width="36" height="36">
+        <span>Multiomics RG</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#schedule" class="active">Schedule</a></li>
+        <li><a href="#topics">Topics</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="organizers.html">Organizers</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <main id="main">
+    <section class="hero">
+      <div class="container">
+        <img src="assets/logo.png" alt="Multiomics Reading Group logo" class="hero-logo fade-up">
+        <h1 class="fade-up">
+          <span class="accent">Multiomics</span><br>Reading Group
+        </h1>
+        <p class="hero-tagline fade-up">
+          Exploring the future of ML modeling for multi-omics data.<br>
+          (Mostly) every Wednesday, <em>11 AM–12 PM EST</em>.
+        </p>
+        <div class="cta-group fade-up">
+          <a href="https://meet.google.com/bvv-fcdn-rxm" class="btn btn-primary" target="_blank" rel="noopener">
+            <span aria-hidden="true">&#9679;</span> Join on Google Meet
+          </a>
+          <a href="https://join.slack.com/t/multiomics-rg/shared_invite/zt-3h75lf643-GU70MKYouIiuFIWMczLGPQ" class="btn btn-secondary" target="_blank" rel="noopener">
+            <span aria-hidden="true">&#x1F4AC;</span> Join Our Slack
+          </a>
+          <a href="mailto:multiomics-reading-group@mila.quebec" class="btn btn-secondary">
+            <span aria-hidden="true">&#9993;</span> Propose a Talk
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== SCHEDULE ======== -->
+    <section id="schedule">
+      <div class="container">
+        <div class="section-label fade-up">Schedule</div>
+        <h2 class="section-title fade-up">Upcoming Talks</h2>
+        <p class="section-subtitle fade-up">
+          Got an open slot with your name on it? <a href="mailto:multiomics-reading-group@mila.quebec">Propose a talk</a>.
+        </p>
+
+        <div id="upcoming-talks" class="schedule-list fade-up" role="list" aria-label="Upcoming talks">
+          <p class="schedule-empty">Loading schedule&hellip;</p>
+        </div>
+
+        <!-- Past talks: collapsed by default -->
+        <div style="margin-top: 3rem;">
+          <button id="past-toggle" class="btn btn-secondary" aria-expanded="false" aria-controls="past-section" style="margin-bottom: 1.5rem;">
+            <span class="toggle-arrow" style="display:inline-block;transition:transform 0.3s;" aria-hidden="true">&#9660;</span>
+            <span class="toggle-text">Show Past Talks</span>
+          </button>
+          <div id="past-section" aria-hidden="true" style="display:none;">
+            <div id="past-talks" role="list" aria-label="Past talks">
+              <p class="schedule-empty">Loading&hellip;</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== TOPICS ======== -->
+    <section id="topics" style="border-top: 1px solid var(--glass-border);">
+      <div class="container">
+        <div class="section-label fade-up">What We Cover</div>
+        <h2 class="section-title fade-up">Where Biology Meets Compute</h2>
+        <p class="section-subtitle fade-up">
+          The overlooked signal in the biology. The causal framework that shouldn't work but does. The training trick, the generative model, the insight that reshapes what the next architecture needs to learn. Both sides of the bench welcome.
+        </p>
+        <div class="topics-grid stagger">
+          <div class="topic-card fade-up">
+            <span class="topic-icon" aria-hidden="true">&#x1F9EC;</span>
+            <h3>Genomics &amp; Transcriptomics</h3>
+            <p>Foundation models for DNA/RNA, language models for sequences, single-cell expression modeling.</p>
+          </div>
+          <div class="topic-card fade-up">
+            <span class="topic-icon" aria-hidden="true">&#x1F52C;</span>
+            <h3>Proteomics &amp; Structure</h3>
+            <p>Protein language models, structure prediction, intermolecular interactions, and multi-modal bio representations.</p>
+          </div>
+          <div class="topic-card fade-up">
+            <span class="topic-icon" aria-hidden="true">&#x2699;&#xFE0F;</span>
+            <h3>Model Design &amp; Training</h3>
+            <p>Tokenization strategies, pre-training/fine-tuning regimes, architecture choices that actually matter.</p>
+          </div>
+          <div class="topic-card fade-up">
+            <span class="topic-icon" aria-hidden="true">&#x1F517;</span>
+            <h3>Multi-Omics Integration</h3>
+            <p>Bridging single- to multi-omics. Cross-modal learning. Making different data types talk to each other.</p>
+          </div>
+          <div class="topic-card fade-up">
+            <span class="topic-icon" aria-hidden="true">&#x1F4CA;</span>
+            <h3>Evaluation &amp; Benchmarks</h3>
+            <p>How do we know any of this works? Perturbation prediction, benchmark design, and honest assessment.</p>
+          </div>
+          <div class="topic-card fade-up">
+            <span class="topic-icon" aria-hidden="true">&#x1F4DD;</span>
+            <h3>Position Papers &amp; "Why"</h3>
+            <p>The hard questions. Why build foundation models for biology? What should they even do? We read the arguments.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== RESOURCES ======== -->
+    <section id="resources" style="border-top: 1px solid var(--glass-border);">
+      <div class="container">
+        <div class="section-label fade-up">Resources</div>
+        <h2 class="section-title fade-up">Dig Deeper</h2>
+        <div class="resources-row fade-up">
+          <a href="https://join.slack.com/t/multiomics-rg/shared_invite/zt-3h75lf643-GU70MKYouIiuFIWMczLGPQ" class="resource-link" target="_blank" rel="noopener">
+            <div class="resource-icon" aria-hidden="true">&#x1F4AC;</div>
+            <div class="resource-text">
+              <strong>Slack Workspace</strong>
+              <span>Discussion &amp; paper voting</span>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+          <a href="https://www.youtube.com/playlist?list=PLoVkjhDgBOt1W6a6Gc2KCGvZNg_fVamD-" class="resource-link" target="_blank" rel="noopener">
+            <div class="resource-icon" aria-hidden="true">&#x25B6;</div>
+            <div class="resource-text">
+              <strong>YouTube Playlist</strong>
+              <span>Recordings of past talks</span>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="footer">
+    <div class="container">
+      <p>Multiomics Reading Group &middot; <a href="mailto:multiomics-reading-group@mila.quebec">multiomics-reading-group@mila.quebec</a></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
