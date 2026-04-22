@@ -206,6 +206,22 @@
     });
   }
 
+  // ---- Hero local time ----
+  const heroLocal = document.getElementById('hero-local-time');
+  if (heroLocal) {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (!/America\/(New_York|Toronto|Montreal|Detroit)/.test(tz)) {
+      // Use a nearby Wednesday to get an accurate conversion
+      const ref = new Date();
+      ref.setUTCHours(16, 0, 0, 0);
+      const refEnd = new Date(ref);
+      refEnd.setUTCHours(17);
+      const fmt = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      const tzAbbr = ref.toLocaleTimeString([], { timeZoneName: 'short' }).split(' ').pop();
+      heroLocal.textContent = ` · ${fmt(ref)}\u2013${fmt(refEnd)} ${tzAbbr}`;
+    }
+  }
+
   // ---- Organizers rendering (if on organizers page) ----
   const organizersContainer = document.getElementById('organizers-grid');
   if (organizersContainer) {
@@ -217,7 +233,7 @@
       {
         name: 'César Miguel Valdez Córdova',
         role: 'Co-host',
-        affiliation: 'McGill / Mila',
+        affiliation: 'Mila / McGill',
         link: 'https://cmvcordova.com',
         initials: 'CV',
         photo: 'assets/cesar.jpg',
@@ -233,7 +249,7 @@
       {
         name: 'Dylan Mann-Krzisnik',
         role: 'Organizer',
-        affiliation: 'McGill / Mila',
+        affiliation: 'Mila / McGill',
         link: 'https://sites.google.com/view/dylan-mk/home',
         initials: 'DM',
         photo: 'assets/dylan.jpg',
@@ -241,7 +257,7 @@
       {
         name: 'Jiayao (Claris) Gu',
         role: 'Organizer',
-        affiliation: 'McGill / Mila',
+        affiliation: 'Mila / McGill',
         link: '',
         initials: 'JG',
         photo: 'assets/claris.jpg',
