@@ -4,6 +4,7 @@
     {
       "name": "2026 Summer/Fall",
       "talks": [
+        { "date": "2026-06-03", "speaker": "Boyang Fu", "affiliation": "Harvard University", "title": "STRAND: Sequence-Conditioned Transport for Single-Cell Perturbations", "note": "", "paper": "https://doi.org/10.48550/arXiv.2602.10156" },
         { "date": "2026-05-27", "speaker": "", "affiliation": "", "title": "", "note": "" },
         { "date": "2026-05-20", "speaker": "Ali Poursina", "affiliation": "McGill University", "title": "A latent space thermodynamic model of cell differentiation", "note": "", "paper": "https://doi.org/10.64898/2026.03.04.709512" },
         { "date": "2026-05-13", "speaker": "Eric Huang, Adrien Osakwe", "affiliation": "McGill University", "title": "scTimeBench: A streamlined benchmarking platform for single-cell time-series analysis", "note": "", "paper": "https://doi.org/10.64898/2026.03.16.712069" },
