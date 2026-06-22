@@ -5,6 +5,7 @@
       "name": "2026 Summer/Fall",
       "talks": [
         { "date": "2026-07-24", "speaker": "Edward De Brouwer", "affiliation": "", "title": "AssayBench: An Assay-Level Virtual Cell Benchmark for LLMs and Agents", "note": "Off-schedule: 11am-12pm", "paper": "https://doi.org/10.48550/arXiv.2605.10876" },
+        { "date": "2026-07-15", "speaker": "Taewon Kim", "affiliation": "KAIST", "title": "Atom-level Protein Representation Learning Improves Protein Structure Prediction", "note": "", "paper": "https://doi.org/10.48550/arXiv.2605.22133" },
         { "date": "2026-06-17", "speaker": "Fang Wu", "affiliation": "", "title": "Proteo-R1: Reasoning Foundation Models for De Novo Protein Design", "note": "", "paper": "https://doi.org/10.48550/arXiv.2605.02937" },
         { "date": "2026-06-10", "speaker": "Zichao Yan", "affiliation": "", "title": "PRiMeFlow: Capturing Complex Expression Heterogeneity in Perturbation Response Modelling", "note": "", "paper": "https://doi.org/10.48550/arXiv.2604.13986" },
         { "date": "2026-06-03", "speaker": "Boyang Fu", "affiliation": "Harvard University", "title": "STRAND: Sequence-Conditioned Transport for Single-Cell Perturbations", "note": "", "paper": "https://doi.org/10.48550/arXiv.2602.10156" },
