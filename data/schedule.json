@@ -6,7 +6,7 @@
       "talks": [
         { "date": "2026-08-26", "speaker": "Dhruva Abhijit Rajwade", "affiliation": "Biomedical Data Science Center, Lausanne University Hospital / Swiss Institute of Bioinformatics (SIB)", "title": "Reasoning Across Space: Tiny Recursive Models for Spatial Omics", "note": "", "paper": "https://openreview.net/forum?id=vtTox3sHaS" },
         { "date": "2026-08-19", "speaker": "Hyunjin Seo", "affiliation": "Trillion Labs", "title": "TheBioCollection: Unified Pre-Training Scale LLM Corpus for Biology", "note": "", "paper": "https://doi.org/10.48550/arXiv.2607.08803" },
-        { "date": "2026-08-12", "speaker": "", "affiliation": "", "title": "", "note": "" },
+        { "date": "2026-08-12", "speaker": "Alon Hacohen", "affiliation": "Technion – Israel Institute of Technology", "title": "Hiding in Plain Sight: Visible Gene Correlations Undermine Single-Cell Representations", "note": "", "paper": "https://openreview.net/forum?id=DmEPWRT0oE" },
         { "date": "2026-08-05", "speaker": "Chang Ma", "affiliation": "Genentech / University of Hong Kong", "title": "Orion: Towards Lab Automation with Computer-Using Agents", "note": "", "paper": "https://doi.org/10.64898/2026.06.13.732095" },
         { "date": "2026-07-29", "speaker": "Edward De Brouwer", "affiliation": "Genentech", "title": "AssayBench: An Assay-Level Virtual Cell Benchmark for LLMs and Agents", "note": "", "paper": "https://doi.org/10.48550/arXiv.2605.10876" },
         { "date": "2026-07-22", "speaker": "Xinyu Yuan", "affiliation": "Mila - Québec AI Institute / University of Montréal", "title": "PerturbDiff: Functional Diffusion for Single-Cell Perturbation Modeling", "note": "", "paper": "https://doi.org/10.48550/arXiv.2602.19685" },
