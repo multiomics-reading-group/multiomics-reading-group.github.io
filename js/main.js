@@ -201,6 +201,10 @@
   const fmtTime = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   const tzAbbr = (d) => d.toLocaleTimeString([], { timeZoneName: 'short' }).split(' ').pop();
 
+  // Visitor-local calendar date of an instant, as YYYY-MM-DD.
+  const localDateKey = (d) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
   // Milliseconds `timeZone` is ahead of UTC at the instant `date`.
   function tzOffsetMs(date, timeZone) {
     const parts = new Intl.DateTimeFormat('en-US', {
@@ -235,7 +239,12 @@
       const start = meetingInstant(dateStr, MEETING_START_HOUR);
       const end = meetingInstant(dateStr, MEETING_END_HOUR);
       if (!start || !end) return;
-      el.textContent = `${fmtTime(start)}–${fmtTime(end)} ${tzAbbr(start)}`;
+      // The row's date column shows the Eastern date, so name the local date
+      // whenever the visitor's day differs (e.g. Tokyo starts after midnight).
+      const rollover = localDateKey(start) === dateStr
+        ? ''
+        : ` (${start.toLocaleDateString([], { month: 'short', day: 'numeric' })})`;
+      el.textContent = `${fmtTime(start)}–${fmtTime(end)} ${tzAbbr(start)}${rollover}`;
     });
   }
 
@@ -248,7 +257,12 @@
     const start = meetingInstant(wed, MEETING_START_HOUR);
     const end = meetingInstant(wed, MEETING_END_HOUR);
     if (start && end) {
-      heroLocal.textContent = ` · ${fmtTime(start)}–${fmtTime(end)} ${tzAbbr(start)}`;
+      // The tagline says "every Wednesday", so name the local weekday whenever
+      // the meeting lands on a different day for this visitor.
+      const rollover = localDateKey(start) === wed
+        ? ''
+        : ` (${start.toLocaleDateString([], { weekday: 'short' })})`;
+      heroLocal.textContent = ` · ${fmtTime(start)}–${fmtTime(end)} ${tzAbbr(start)}${rollover}`;
     }
   }
 
