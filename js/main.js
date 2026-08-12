@@ -183,43 +183,81 @@
           ${noteDisplay}
         </div>
         <div class="schedule-time">
-          11–12 PM EST
+          11 AM–12 PM ET
           <span class="schedule-local-time" data-date="${talk.date}"></span>
         </div>
       </div>`;
   }
 
-  // ---- Convert EST times to visitor's local timezone ----
+  // ---- Meeting time -> visitor's local timezone ----
+  // The meeting is anchored to 11:00 *wall-clock* Eastern, which is UTC-5 in
+  // winter (EST) and UTC-4 under daylight saving (EDT). Never hardcode the
+  // offset: ask the runtime what it actually was on that specific date.
+  const MEETING_TZ = 'America/New_York';
+  const MEETING_START_HOUR = 11;
+  const MEETING_END_HOUR = 12;
+
+  const isEasternZone = (tz) => /^America\/(New_York|Toronto|Montreal|Detroit)$/.test(tz);
+  const fmtTime = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const tzAbbr = (d) => d.toLocaleTimeString([], { timeZoneName: 'short' }).split(' ').pop();
+
+  // Milliseconds `timeZone` is ahead of UTC at the instant `date`.
+  function tzOffsetMs(date, timeZone) {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone, hour12: false,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+    }).formatToParts(date).reduce((acc, p) => (acc[p.type] = p.value, acc), {});
+    const wall = Date.UTC(
+      Number(parts.year), Number(parts.month) - 1, Number(parts.day),
+      Number(parts.hour) % 24, Number(parts.minute), Number(parts.second)
+    );
+    return wall - Math.floor(date.getTime() / 1000) * 1000;
+  }
+
+  // The true UTC instant of `hour`:00 wall-clock in MEETING_TZ on `dateStr`
+  // (YYYY-MM-DD). Returns null if the date can't be parsed.
+  function meetingInstant(dateStr, hour) {
+    const naive = Date.parse(`${dateStr}T${String(hour).padStart(2, '0')}:00:00Z`);
+    if (Number.isNaN(naive)) return null;
+    // First pass estimates the offset; the second re-checks it at the corrected
+    // instant, which matters if the estimate lands across a DST transition.
+    const once = naive - tzOffsetMs(new Date(naive), MEETING_TZ);
+    return new Date(naive - tzOffsetMs(new Date(once), MEETING_TZ));
+  }
+
   function renderLocalTimes() {
+    // Visitors already on Eastern time see the posted time unchanged.
+    if (isEasternZone(Intl.DateTimeFormat().resolvedOptions().timeZone)) return;
     document.querySelectorAll('.schedule-local-time').forEach(el => {
       const dateStr = el.dataset.date;
       if (!dateStr) return;
-      // 11 AM EST = 16:00 UTC
-      const start = new Date(dateStr + 'T16:00:00Z');
-      const end = new Date(dateStr + 'T17:00:00Z');
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      // Skip if visitor is in US Eastern
-      if (/America\/(New_York|Toronto|Montreal|Detroit)/.test(tz)) return;
-      const fmt = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-      const tzAbbr = start.toLocaleTimeString([], { timeZoneName: 'short' }).split(' ').pop();
-      el.textContent = `${fmt(start)}–${fmt(end)} ${tzAbbr}`;
+      const start = meetingInstant(dateStr, MEETING_START_HOUR);
+      const end = meetingInstant(dateStr, MEETING_END_HOUR);
+      if (!start || !end) return;
+      el.textContent = `${fmtTime(start)}–${fmtTime(end)} ${tzAbbr(start)}`;
     });
   }
 
   // ---- Hero local time ----
   const heroLocal = document.getElementById('hero-local-time');
-  if (heroLocal) {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (!/America\/(New_York|Toronto|Montreal|Detroit)/.test(tz)) {
-      // Use a nearby Wednesday to get an accurate conversion
-      const ref = new Date();
-      ref.setUTCHours(16, 0, 0, 0);
-      const refEnd = new Date(ref);
-      refEnd.setUTCHours(17);
-      const fmt = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-      const tzAbbr = ref.toLocaleTimeString([], { timeZoneName: 'short' }).split(' ').pop();
-      heroLocal.textContent = ` · ${fmt(ref)}\u2013${fmt(refEnd)} ${tzAbbr}`;
+  if (heroLocal && !isEasternZone(Intl.DateTimeFormat().resolvedOptions().timeZone)) {
+    // Anchor to the upcoming Wednesday so the offset reflects the DST rules in
+    // force for the next meeting rather than for today.
+    const wed = nextWednesday();
+    const start = meetingInstant(wed, MEETING_START_HOUR);
+    const end = meetingInstant(wed, MEETING_END_HOUR);
+    if (start && end) {
+      heroLocal.textContent = ` · ${fmtTime(start)}–${fmtTime(end)} ${tzAbbr(start)}`;
     }
+  }
+
+  // Next Wednesday (today, if today is Wednesday) as YYYY-MM-DD.
+  function nextWednesday() {
+    const now = new Date();
+    const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    d.setUTCDate(d.getUTCDate() + ((3 - d.getUTCDay() + 7) % 7));
+    return d.toISOString().slice(0, 10);
   }
 
   // ---- Organizers rendering (if on organizers page) ----
