@@ -94,7 +94,8 @@
       if (upcoming.length === 0) {
         upcomingContainer.innerHTML = '<p class="schedule-empty">No upcoming talks scheduled yet. Check back soon!</p>';
       } else {
-        upcomingContainer.innerHTML = upcoming.map((t, i) => renderTalkRow(t, i === 0)).join('');
+        const nextIdx = upcoming.findIndex(isGoingAhead);
+        upcomingContainer.innerHTML = upcoming.map((t, i) => renderTalkRow(t, i === nextIdx)).join('');
       }
     }
 
@@ -127,6 +128,11 @@
 
     renderLocalTimes();
   }
+
+  // A row that only marks a slot as not happening should never be styled as
+  // the next talk, even when it is the soonest date left on the calendar.
+  const isGoingAhead = (talk) =>
+    !/cancel|postpone|skip|holiday|reschedul/i.test(talk.note || '');
 
   function renderTalkRow(talk, isNext) {
     const d = new Date(talk.date + 'T12:00:00');
@@ -164,6 +170,10 @@
       ? `<span class="schedule-speaker"><strong>${talk.speaker}</strong>${talk.affiliation ? ' · ' + talk.affiliation : ''}</span>`
       : '';
 
+    // Off-schedule talks carry their own hours; everything else uses the slot.
+    const startHour = Number.isFinite(talk.startHour) ? talk.startHour : MEETING_START_HOUR;
+    const endHour = Number.isFinite(talk.endHour) ? talk.endHour : MEETING_END_HOUR;
+
     const classes = [
       'schedule-item',
       isNext ? 'is-next' : '',
@@ -183,8 +193,8 @@
           ${noteDisplay}
         </div>
         <div class="schedule-time">
-          11 AM–12 PM ET
-          <span class="schedule-local-time" data-date="${talk.date}"></span>
+          ${easternRange(startHour, endHour)}
+          <span class="schedule-local-time" data-date="${talk.date}" data-start="${startHour}" data-end="${endHour}"></span>
         </div>
       </div>`;
   }
@@ -198,6 +208,12 @@
   const MEETING_END_HOUR = 12;
 
   const isEasternZone = (tz) => /^America\/(New_York|Toronto|Montreal|Detroit)$/.test(tz);
+  const meridiem = (h) => (h < 12 ? 'AM' : 'PM');
+  const hour12 = (h) => ((h + 11) % 12) + 1;
+  // "11 AM–12 PM ET", but "10–11 AM ET" when both ends share a meridiem.
+  const easternRange = (s, e) => meridiem(s) === meridiem(e)
+    ? `${hour12(s)}–${hour12(e)} ${meridiem(e)} ET`
+    : `${hour12(s)} ${meridiem(s)}–${hour12(e)} ${meridiem(e)} ET`;
   const fmtTime = (d) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   const tzAbbr = (d) => d.toLocaleTimeString([], { timeZoneName: 'short' }).split(' ').pop();
 
@@ -236,8 +252,8 @@
     document.querySelectorAll('.schedule-local-time').forEach(el => {
       const dateStr = el.dataset.date;
       if (!dateStr) return;
-      const start = meetingInstant(dateStr, MEETING_START_HOUR);
-      const end = meetingInstant(dateStr, MEETING_END_HOUR);
+      const start = meetingInstant(dateStr, Number(el.dataset.start));
+      const end = meetingInstant(dateStr, Number(el.dataset.end));
       if (!start || !end) return;
       // The row's date column shows the Eastern date, so name the local date
       // whenever the visitor's day differs (e.g. Tokyo starts after midnight).
