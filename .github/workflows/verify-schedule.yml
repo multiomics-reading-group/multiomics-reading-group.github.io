@@ -1,0 +1,35 @@
+name: Verify schedule
+
+on:
+  pull_request:
+    paths:
+      - data/schedule.json
+      - .github/scripts/verify-schedule.mjs
+      - .github/workflows/verify-schedule.yml
+  push:
+    branches: [main]
+    paths:
+      - data/schedule.json
+      - .github/scripts/verify-schedule.mjs
+      - .github/workflows/verify-schedule.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # PRs check the talks they change; pushes check what the push changed;
+      # manual runs (no base) check every talk. PRs run strict because that is
+      # where the weekly routine's changes arrive and get merged automatically.
+      - name: Verify data/schedule.json
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          STRICT: ${{ github.event_name == 'pull_request' && '--strict' || '' }}
+        run: node .github/scripts/verify-schedule.mjs ${BASE:+--base "$BASE"} $STRICT

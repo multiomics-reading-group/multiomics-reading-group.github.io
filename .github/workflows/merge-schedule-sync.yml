@@ -1,0 +1,51 @@
+name: Merge verified schedule sync
+
+# The weekly schedule-sync routine opens PRs from claude/schedule-sync-* branches.
+# Once "Verify schedule" passes on one, merge it so the site updates without a
+# manual step. PRs that touch anything besides data/schedule.json are left open
+# for a person to review.
+
+on:
+  workflow_run:
+    workflows: [Verify schedule]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  pages: write
+
+jobs:
+  merge:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      startsWith(github.event.workflow_run.head_branch, 'claude/schedule-sync') &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          pr=$(gh pr list -R "$GITHUB_REPOSITORY" --head "$BRANCH" --state open \
+            --json number,headRefOid --jq ".[] | select(.headRefOid == \"$HEAD_SHA\") | .number")
+          if [ -z "$pr" ]; then
+            echo "No open PR on $BRANCH at $HEAD_SHA (already merged, or newer commits were pushed)."
+            exit 0
+          fi
+
+          files=$(gh pr view "$pr" -R "$GITHUB_REPOSITORY" --json files --jq '.files[].path')
+          if [ "$files" != "data/schedule.json" ]; then
+            echo "PR #$pr changes more than data/schedule.json; leaving it for review:"
+            echo "$files"
+            exit 0
+          fi
+
+          gh pr merge "$pr" -R "$GITHUB_REPOSITORY" --squash --delete-branch --match-head-commit "$HEAD_SHA"
+
+          # Pushes made with the workflow token may not start a Pages build on
+          # their own, so ask for one explicitly.
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds"
