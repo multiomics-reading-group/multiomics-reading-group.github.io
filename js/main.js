@@ -141,15 +141,19 @@
     const year = d.getFullYear();
 
     const isCancelled = talk.note && /cancel/i.test(talk.note);
-    const isPostponed = talk.note && /postpone/i.test(talk.note);
+    // Postponed and rescheduled both mean the talk is not happening in this slot.
+    const isMoved = talk.note && /postpone|reschedul/i.test(talk.note);
     const isSkip = talk.note && /skip|holiday/i.test(talk.note);
+    // Strike the title of a talk that is not going ahead on this date. Rows that
+    // only mark an empty slot print their note as the title, so leave those be.
+    const isStruck = Boolean(talk.title) && (isCancelled || isMoved);
     const isEmpty = !talk.title && !talk.speaker && !isSkip;
 
     let titleDisplay = talk.title || '';
     let noteDisplay = '';
 
     if (talk.note) {
-      noteDisplay = `<span class="schedule-badge${isCancelled ? ' badge-cancelled' : ''}${isPostponed ? ' badge-postponed' : ''}">${talk.note}</span>`;
+      noteDisplay = `<span class="schedule-badge${isCancelled ? ' badge-cancelled' : ''}${isMoved ? ' badge-postponed' : ''}">${talk.note}</span>`;
     }
 
     if (isEmpty && !talk.note) {
@@ -177,7 +181,7 @@
     const classes = [
       'schedule-item',
       isNext ? 'is-next' : '',
-      isCancelled ? 'is-cancelled' : '',
+      isStruck ? 'is-struck' : '',
       isSkip ? 'is-skip' : '',
     ].filter(Boolean).join(' ');
 

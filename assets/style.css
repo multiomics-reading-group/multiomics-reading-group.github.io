@@ -962,11 +962,11 @@ section {
   padding-left: 0.25rem;
 }
 
-.schedule-item.is-cancelled {
+.schedule-item.is-struck {
   opacity: 0.45;
 }
 
-.schedule-item.is-cancelled .schedule-title {
+.schedule-item.is-struck .schedule-title {
   text-decoration: line-through;
   text-decoration-color: var(--text-muted);
 }
